@@ -1,0 +1,45 @@
+{
+    "name": "stefanmcds-mnt/satispay",
+    "description": "SatisPay API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "STEF@N MCDS S.a.s.",
+            "email": "info@stefan-mcds.it",
+            "homepage": "http://www.stefan-mcds.it"
+        }
+    ],
+    "homepage": "https://github.com/stefanmcds-mnt/satispay",
+    "keywords": [
+        "Laravel",
+        "SatisPay"
+    ],
+    "require": {
+        "illuminate/support": "*",
+        "satispay/gbusiness-api-php-sdk": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "orchestra/testbench": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SatisPay\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SatisPay\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SatisPay\\SatisPayServiceProvider"
+            ],
+            "aliases": {
+                "SatisPay": "SatisPay\\Facades\\SatisPay"
+            }
+        }
+    }
+}
