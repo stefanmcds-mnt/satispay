@@ -2,6 +2,8 @@
     "name": "stefanmcds-mnt/satispay",
     "description": "SatisPay API",
     "license": "MIT",
+    "type": "package",
+    "version": "1.0",
     "authors": [
         {
             "name": "STEF@N MCDS S.a.s.",
