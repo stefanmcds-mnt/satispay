@@ -13,7 +13,7 @@ use SatispayGBusiness\Request;
 
 class SatisPay
 {
-    private static $mode;
+    public static ?array $mode;
 
     /**
      * Create a new controller instance.
@@ -21,9 +21,9 @@ class SatisPay
      * @param string $mode
      * @return mixed
      */
-    public function __construct($mode)
+    public function __construct(?array $mode)
     {
-        return self::$mode = $mode;
+        return static::$mode = $mode;
     }
 
     /**
@@ -156,31 +156,20 @@ class SatisPay
     private static function Authentication()
     {
         // ensure if is the first time to generate keys
-        $config = config('satispay');
-        if ($config[self::$mode]['Token'] === null) {
+        if (self::$mode['token'] === null) {
             return true; // already have keys
         } else {
             // Authenticate and generate the keys
             if ($Api = new Api()) {
-                if (self::$mode === 'Sandbox') {
+                if (strtolower(self::$mode['mode']) === 'sandbox') {
                     $Api->setSandbox(true);
                 }
-                if ($Keys = $Api->authenticateWithToken($config[self::$mode]['Token'])) {
+                if ($Keys = $Api->authenticateWithToken(self::$mode['token'])) {
                     // Export keys
-                    $config[self::$mode]['PublicKey'] = $Keys->publicKey;
-                    $config[self::$mode]['PrivateKey'] = $Keys->privateKey;
-                    $config[self::$mode]['KeyId'] = $Keys->keyId;
-                    $config[self::$mode]['Token'] = null;
-                    if (file_put_contents(
-                        config_path() . '/satispay.php',
-                        "<?php\n" .
-                            "/**\n * Config File for SatisPay Controller\n * the Token key will be null with generated keys\n */ \n" .
-                            "return " .
-                            str_replace(['array ', '(', ')'], ['', '[', ']'], var_export($config, true) .
-                                ";\n")
-                    )) {
-                        return true;
-                    }
+                    self::$mode['publickey'] = $Keys->publicKey;
+                    self::$mode['privatekey'] = $Keys->privateKey;
+                    self::$mode['keyid'] = $Keys->keyId;
+                    self::$mode['token'] = null;
                 }
             }
         }
@@ -192,8 +181,13 @@ class SatisPay
      */
     private static function _getSettings()
     {
+        /*
         if ($settings = config('satispay')) {
             return (object) $settings[self::$mode];
+        }
+        */
+        if (is_array(self::$mode)) {
+            return (object) self::$mode;
         }
         return false;
     }
@@ -210,9 +204,9 @@ class SatisPay
                 if (self::$mode === 'Sandbox') {
                     $Api->setSandbox(true);
                 }
-                $Api->setPublicKey($Settings->PublicKey);
-                $Api->setPrivateKey($Settings->PrivateKey);
-                $Api->setKeyId($Settings->KeyId);
+                $Api->setPublicKey($Settings->publickey);
+                $Api->setPrivateKey($Settings->privatekey);
+                $Api->setKeyId($Settings->keyid);
                 return $Api;
             } else {
                 return false;
