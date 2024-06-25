@@ -156,7 +156,7 @@ class SatisPay
     private static function Authentication()
     {
         // ensure if is the first time to generate keys
-        if (self::$mode['token'] === null) {
+        if (self::$mode['token'] !== null) {
             return true; // already have keys
         } else {
             // Authenticate and generate the keys
@@ -235,9 +235,9 @@ class SatisPay
         if (in_array($Data->Intent, ['MATCH_CODE', 'MATCH_USER', 'PRE_AUTHORIZED', 'REFUND'])) {
             $data = [
                 "flow" => $Data->Intent,
-                "amount_unit" => (isset($Data->Tipo->subtotale)) ? (number_format(round($Data->Tipo->totale + $Data->Tipo->subtotale, 2), 2) * 100) : (number_format(round($Data->Tipo->totale, 2), 2) * 100), //  100,
+                "amount_unit" => (isset($Data->Tipo->diffamount) && $Data->Tipo->diffamount > 0) ? (number_format(round($Data->Tipo->amount + $Data->Tipo->diffamount, 2), 2) * 100) : (number_format(round($Data->Tipo->amount, 2), 2) * 100), //  100,
                 "currency" => "EUR",
-                "external_code" => $Data->Tipo->numero, // "my_order_id",
+                "external_code" => $Data->Tipo->number, // "my_order_id",
                 //"callback_url" => $Settings->CallBack . "?PaymentType=SatisPay&PaymentId={uuid}",
                 //"redirect_url" => $Settings->Redirect,
                 /*
@@ -254,7 +254,7 @@ class SatisPay
         if (in_array($Data->Intent, ['REFUND'])) {
             $data = [
                 "flow" => $Data->Intent,
-                "amount_unit" => (isset($Data->Tipo->subtotale)) ? (number_format(round($Data->Tipo->totale + $Data->Tipo->subtotale, 2), 2) * 100) : (number_format(round($Data->Tipo->totale, 2), 2) * 100), //  100,
+                "amount_unit" => (isset($Data->Tipo->diffamount) && $Data->Tipo->diffamount > 0) ? (number_format(round($Data->Tipo->amount + $Data->Tipo->diffamount, 2), 2) * 100) : (number_format(round($Data->Tipo->amount, 2), 2) * 100), //  100,
                 "currency" => "EUR",
                 "parent_payment_uid" => $Data->id,
             ];
