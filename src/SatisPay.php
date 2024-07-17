@@ -156,7 +156,7 @@ class SatisPay
     private static function Authentication()
     {
         // ensure if is the first time to generate keys
-        if (self::$mode['token'] !== null) {
+        if (self::$mode['token'] === null) {
             return true; // already have keys
         } else {
             // Authenticate and generate the keys
@@ -207,6 +207,7 @@ class SatisPay
                 $Api->setPublicKey($Settings->publickey);
                 $Api->setPrivateKey($Settings->privatekey);
                 $Api->setKeyId($Settings->keyid);
+                //$Api->setSecurityBearer($Settings->keyid);
                 return $Api;
             } else {
                 return false;
