@@ -166,7 +166,8 @@ class SatisPayController extends Controller
                 if (self::$mode === 'Sandbox') {
                     $Api->setSandbox(true);
                 }
-                if ($Keys = $Api->authenticateWithToken($config[self::$mode]['Token'])) {
+                #if ($Keys = $Api->authenticateWithToken($config[self::$mode]['Token'])) {
+                if ($Keys = $Api->authenticateWithToken(self::$mode['Token'])) {
                     // Export keys
                     $config[self::$mode]['PublicKey'] = $Keys->publicKey;
                     $config[self::$mode]['PrivateKey'] = $Keys->privateKey;
