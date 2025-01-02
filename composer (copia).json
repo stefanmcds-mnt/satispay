@@ -13,13 +13,16 @@
     ],
     "homepage": "https://github.com/stefanmcds-mnt/satispay",
     "keywords": [
+        "Laravel",
         "SatisPay"
     ],
     "require": {
+        "illuminate/support": "*",
         "satispay/gbusiness-api-php-sdk": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
+        "orchestra/testbench": "*"
     },
     "autoload": {
         "psr-4": {
@@ -29,6 +32,16 @@
     "autoload-dev": {
         "psr-4": {
             "SatisPay\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SatisPay\\SatisPayServiceProvider"
+            ],
+            "aliases": {
+                "SatisPay": "SatisPay\\Facades\\SatisPay"
+            }
         }
     }
 }
